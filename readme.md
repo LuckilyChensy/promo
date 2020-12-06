@@ -1,7 +1,7 @@
 #### 项目环境：IDEA，maven，MySQL5.x
 
-* 项目运行方式：从IDEA导入项目，更新maven依赖，然后在MySQL数据库中运行miaosha.sql文件生成数据库。
-* 项目入口为：com.miaoshaproject.App，使用IDEA启动后，若端口被占用，修改application.properties中的端口配置。
+* 项目运行方式：从IDEA导入项目，更新maven依赖，然后在MySQL数据库中运行promo.sql文件生成数据库。
+* 项目入口为：com.promo.App，使用IDEA启动后，若端口被占用，修改application.properties中的端口配置。
 
 * 项目采用前后端分离，直接在浏览器打开resources目录下的getotp.html即可。
 
@@ -171,9 +171,12 @@ http://www.mybatis.org/generator/configreference/xmlconfig.html
 
 2.新建数据库
 
-新建一个miaosha的数据库，并建立两张表，分别是user_info和user_password
+新建一个promo的数据库，并建立两张表，分别是user_info和user_password
 
 3.修改配置文件
+
+mybatis-generator.xml 红色提示修正 “"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd"”
+https://blog.csdn.net/weixin_43367967/article/details/85198352
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -183,16 +186,16 @@ http://www.mybatis.org/generator/configreference/xmlconfig.html
 
 <generatorConfiguration>
 
-    <context id="DB2Tables" targetRuntime="MyBatis3">
+    <context id="MYSQLTables" targetRuntime="MyBatis3">
         <!--数据库链接地址账号密码-->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/miaosha"
+                        connectionURL="jdbc:mysql://localhost:3306/promo?useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF8&amp;serverTimezone=GMT"
                         userId="root"
-                        password="123456">
+                        password="123">
         </jdbcConnection>
 
         <!--生成DataObject类存放位置-->
-        <javaModelGenerator targetPackage="com.miaoshaproject.dataobject" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.promo.dataobject" targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
@@ -203,32 +206,29 @@ http://www.mybatis.org/generator/configreference/xmlconfig.html
         </sqlMapGenerator>
 
         <!--生成Dao类存放位置-->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.miaoshaproject.dao"  targetProject="src/main/java">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.promo.dao"  targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
-        <!--生成对应表及类名-->
-        <!--  enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false"
-               这些属性是为了使得只生成简单查询的对应文件，去掉复杂查询的生成文件，因为一般开发中不太用的到-->
         <table tableName="user_info" domainObjectName="UserDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
-               selectByExampleQueryId="false"></table>
+               selectByExampleQueryId="false">
+        </table>
+
         <table tableName="user_password" domainObjectName="userPasswordDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
-               selectByExampleQueryId="false" ></table>
+               selectByExampleQueryId="false" >
+        </table>
 
     </context>
 </generatorConfiguration>
+
 ```
 
 4.生成文件
@@ -238,8 +238,8 @@ http://www.mybatis.org/generator/configreference/xmlconfig.html
 5.接入mysql数据源
 
 ```xml
-spring.datasource.name=miaosha
-spring.datasource.url=jdbc:mysql://localhost:3306/miaosha
+spring.datasource.name=promo
+spring.datasource.url=jdbc:mysql://localhost:3306/promo
 spring.datasource.username=root
 spring.datasource.password=123456
 
@@ -253,9 +253,9 @@ spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 修改App类
 
 ```java
-@SpringBootApplication(scanBasePackages = {"com.miaoshaproject"})
+@SpringBootApplication(scanBasePackages = {"com.promo"})
 @RestController
-@MapperScan("com.miaoshaproject.dao")
+@MapperScan("com.promo.dao")
 public class App {
 
     @Autowired
@@ -306,7 +306,7 @@ userController需要UserModel
 2.在service层增加UserModel
 
 ```java
-package com.miaoshaproject.service.model;
+package com.promo.service.model;
 
 /**
  * @author KiroScarlet
@@ -1025,7 +1025,7 @@ success:function (data) {
 在UserDOMapper的insertSelective方法中添加如下代码：
 
 ```xml
- <insert id="insertSelective" parameterType="com.miaoshaproject.dataobject.UserDO" keyProperty="id" useGeneratedKeys="true">
+ <insert id="insertSelective" parameterType="com.promo.dataobject.UserDO" keyProperty="id" useGeneratedKeys="true">
 ```
 
 通过这样的方式将自增id取出之后复制给对应的UserDO
