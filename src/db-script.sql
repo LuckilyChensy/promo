@@ -40,13 +40,6 @@ CREATE TABLE `user_password`  (
   INDEX `use_id`(`user_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
-
-
-
-
-
-
-
 --
 -- Table structure for table `item`
 --
@@ -65,14 +58,6 @@ CREATE TABLE `item`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of item
--- ----------------------------
-INSERT INTO `item` VALUES (1, 'iphone99', 800.00, '最好用的iphone', 3, 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563645867825&di=65cbf1d86165f7185ce7772e2e8a4bca&imgtype=0&src=http%3A%2F%2Fp0.ifengimg.com%2Fpmop%2F2017%2F1127%2F753C746E59ACA849F681F4FC5B75ACD494092110_size15_w600_h400.jpeg');
-INSERT INTO `item` VALUES (2, 'iphone99', 800.00, '最好用的iphone', 0, 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563645867825&di=65cbf1d86165f7185ce7772e2e8a4bca&imgtype=0&src=http%3A%2F%2Fp0.ifengimg.com%2Fpmop%2F2017%2F1127%2F753C746E59ACA849F681F4FC5B75ACD494092110_size15_w600_h400.jpeg');
-INSERT INTO `item` VALUES (3, 'iphone8', 200.00, '第二好用的iphone', 3, 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563647556769&di=cc5c9241446eee425165e9b04a87768c&imgtype=0&src=http%3A%2F%2Fi9.hexun.com%2F2018-03-17%2F192644421.jpg');
-INSERT INTO `item` VALUES (4, 'iphone8', 200.00, '第二好用的iphone', 0, 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563647556769&di=cc5c9241446eee425165e9b04a87768c&imgtype=0&src=http%3A%2F%2Fi9.hexun.com%2F2018-03-17%2F192644421.jpg');
-
--- ----------------------------
 -- Table structure for item_stock
 -- ----------------------------
 DROP TABLE IF EXISTS `item_stock`;
@@ -82,14 +67,6 @@ CREATE TABLE `item_stock`  (
   `item_id` int(11) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
-
--- ----------------------------
--- Records of item_stock
--- ----------------------------
-INSERT INTO `item_stock` VALUES (9, 97, 1);
-INSERT INTO `item_stock` VALUES (10, 100, 2);
-INSERT INTO `item_stock` VALUES (11, 97, 3);
-INSERT INTO `item_stock` VALUES (12, 300, 4);
 
 -- ----------------------------
 -- Table structure for order_info
@@ -107,16 +84,6 @@ CREATE TABLE `order_info`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of order_info
--- ----------------------------
-INSERT INTO `order_info` VALUES ('2019080200000000', 40, 1, 23.00, 1, 23.00, 1);
-INSERT INTO `order_info` VALUES ('2019080200000100', 40, 1, 23.00, 1, 23.00, 1);
-INSERT INTO `order_info` VALUES ('2019080200000200', 40, 1, 23.00, 1, 23.00, 1);
-INSERT INTO `order_info` VALUES ('2019080200000300', 40, 3, 200.00, 1, 200.00, 0);
-INSERT INTO `order_info` VALUES ('2019080200000400', 40, 3, 200.00, 1, 200.00, 0);
-INSERT INTO `order_info` VALUES ('2019080200000500', 40, 3, 200.00, 1, 200.00, 0);
-
--- ----------------------------
 -- Table structure for promo
 -- ----------------------------
 DROP TABLE IF EXISTS `promo`;
@@ -131,12 +98,6 @@ CREATE TABLE `promo`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
 -- ----------------------------
--- Records of promo
--- ----------------------------
-INSERT INTO `promo` VALUES (1, 'iphone大减价', '2019-08-01 19:55:47', '2019-08-09 19:55:52', 1, 23.00);
-INSERT INTO `promo` VALUES (2, 'iphone8大减价', '2019-08-27 20:17:17', '2019-09-05 20:18:18', 3, 3.00);
-
--- ----------------------------
 -- Table structure for sequence_info
 -- ----------------------------
 DROP TABLE IF EXISTS `sequence_info`;
@@ -147,8 +108,5 @@ CREATE TABLE `sequence_info`  (
   PRIMARY KEY (`name`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_bin ROW_FORMAT = Compact;
 
--- ----------------------------
--- Records of sequence_info
--- ----------------------------
-INSERT INTO `sequence_info` VALUES ('order_info', 6, 1);
+
 

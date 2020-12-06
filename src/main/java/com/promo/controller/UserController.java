@@ -21,7 +21,6 @@ import java.util.Random;
 
 @Controller("user")
 @RequestMapping("/user")
-//跨域请求中，不能做到session共享
 @CrossOrigin(allowCredentials = "true",allowedHeaders = "*")
 public class UserController extends BaseController{
 
@@ -30,6 +29,25 @@ public class UserController extends BaseController{
 
     @Autowired
     private HttpServletRequest httpServletRequest;
+
+    //用户登录接口
+    @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    public CommonReturnType login(@RequestParam(name = "telphone") String telphone,
+                                  @RequestParam(name = "password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+        //入参校验
+        if (StringUtils.isEmpty(telphone) || StringUtils.isEmpty(password)) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+        //用户登录服务，用来校验用户登录是否合法
+        //用户加密后的密码
+        UserModel userModel = userService.validateLogin(telphone, this.EncodeByMd5(password));
+        //将登陆凭证加入到用户登录成功的session内
+        this.httpServletRequest.getSession().setAttribute("IS_LOGIN", true);
+        this.httpServletRequest.getSession().setAttribute("LOGIN_USER", userModel);
+
+        return CommonReturnType.create(null);
+    }
 
     @RequestMapping("/get")
     @ResponseBody
@@ -96,10 +114,9 @@ public class UserController extends BaseController{
         userModel.setTelphone(telphone);
         userModel.setRegisitMode("byphone");
         userModel.setEncrptPassword(this.EncodeByMd5(password));
-
         userService.register(userModel);
-        return CommonReturnType.create(null);
 
+        return CommonReturnType.create(null);
     }
 
     //密码加密
