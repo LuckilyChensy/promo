@@ -32,7 +32,7 @@ public class App {
     }
 
     public static void main( String[] args ){
-        System.out.println( "Hello World!" );
+        System.out.println( "promo project bootStrap!" );
         SpringApplication.run(App.class);
     }
 }
