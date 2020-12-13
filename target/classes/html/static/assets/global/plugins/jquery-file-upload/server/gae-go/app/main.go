@@ -215,17 +215,17 @@ func get(w http.ResponseWriter, r *http.Request) {
 }
 
 func post(w http.ResponseWriter, r *http.Request) {
-    result := make(map[string][]*FileInfo, 1)
-    result["files"] = handleUploads(r)
+	result := make(map[string][]*FileInfo, 1)
+	result["files"] = handleUploads(r)
 	b, err := json.Marshal(result)
 	check(err)
 	if redirect := r.FormValue("redirect"); redirect != "" {
-	    if strings.Contains(redirect, "%s") {
-	        redirect = fmt.Sprintf(
-    			redirect,
-    			escape(string(b)),
-    		)
-	    }
+		if strings.Contains(redirect, "%s") {
+			redirect = fmt.Sprintf(
+				redirect,
+				escape(string(b)),
+			)
+		}
 		http.Redirect(w, r, redirect, http.StatusFound)
 		return
 	}

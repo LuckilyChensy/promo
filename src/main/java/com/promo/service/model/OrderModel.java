@@ -1,8 +1,9 @@
 package com.promo.service.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class OrderModel {
+public class OrderModel  implements Serializable {
 
     //交易单号，例如2019052100001212，使用string类型
     private String id;
