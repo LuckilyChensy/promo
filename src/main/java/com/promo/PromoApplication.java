@@ -31,10 +31,10 @@ public class PromoApplication {
         } else {
             return    "<h2>"
                     + "姓名: "+userDO.getName()
-                    +" 年纪: "+userDO.getAge()
-                    +" 注册渠道: "+userDO.getRegisitMode()
-                    +" 电话号码: "+userDO.getTelphone()
-                    +" 性别: "+userDO.getGender()
+                    +" </br> 年纪: "+userDO.getAge()
+                    +" </br> 注册渠道: "+userDO.getRegisitMode()
+                    +" </br> 电话号码: "+userDO.getTelphone()
+                    +" </br> 性别: "+userDO.getGender()
                     + "</h2>";
         }
     }
