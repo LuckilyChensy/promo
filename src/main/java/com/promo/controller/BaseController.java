@@ -17,11 +17,13 @@ public class BaseController {
     public static final String CONTENT_TYPE_FORMED = "application/x-www-form-urlencoded";
 
     //定义exceptionHandler解决未被controller层吸收的exception
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(Exception.class)  // 指明收到什么样的异常后开始处理
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object handlerException(HttpServletRequest request, Exception ex) {
+
         Map<String, Object> responseData = new HashMap<>();
+
         if (ex instanceof BusinessException) {
             BusinessException businessException = (BusinessException) ex;
             responseData.put("errCode", businessException.getErrCode());
