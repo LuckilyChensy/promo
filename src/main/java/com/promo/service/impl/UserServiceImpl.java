@@ -39,16 +39,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional//声明事务
     public void register(UserModel userModel) throws BusinessException {
-//  校验
-//        if (userModel == null) {
-//            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
-//        }
-//        if (StringUtils.isEmpty(userModel.getName())
-//                || userModel.getGender() == null
-//                || userModel.getAge() == null
-//                || StringUtils.isEmpty(userModel.getTelphone())) {
-//            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
-//        }
 
         ValidationResult result = validator.validate(userModel);
         if (result.isHasErrors()) {
@@ -75,8 +65,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserModel validateLogin(String telphone, String encrptPassword) throws BusinessException {
+
         //通过用户手机获取用户信息
         UserDO userDO = userDOMapper.selectByTelphone(telphone);
+
         if (userDO == null) {
             throw new BusinessException(EmBusinessError.USER_LOOGIN_FAIL);
         }
