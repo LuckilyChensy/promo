@@ -8,11 +8,9 @@ public interface UserService {
     // 通过用户ID获取用户对象的方法
     UserModel getUserById(Integer id);
 
+    // 用户注册服务
     void register(UserModel userModel) throws BusinessException;
 
-    /*
-telphone:用户注册手机
-encrptPassowrd:用户加密后的密码
- */
+    // 验证码校验服务
     UserModel validateLogin(String telphone, String encrptPassword) throws BusinessException;
 }
