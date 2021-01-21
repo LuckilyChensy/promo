@@ -114,6 +114,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserModel convertFromDataObject(UserDO userDO,UserPasswordDO userPasswordDO) {
+
         if (userDO == null) {
             return null;
         }
@@ -124,6 +125,7 @@ public class UserServiceImpl implements UserService {
         if (userPasswordDO != null) {
             userModel.setEncrptPassword(userPasswordDO.getEncrptPassword());
         }
+
         return userModel;
 
     }
