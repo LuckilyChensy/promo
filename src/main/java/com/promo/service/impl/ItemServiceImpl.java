@@ -57,6 +57,7 @@ public class ItemServiceImpl implements ItemService {
 
         //返回创建完成的对象
         return this.getItemById(itemModel.getId());
+
     }
 
     @Override
