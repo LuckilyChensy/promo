@@ -15,7 +15,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import sun.misc.BASE64Encoder;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -42,14 +41,13 @@ public class UserController extends BaseController{
 
     /**
      * @param id
-     * @return
      * @throws BusinessException
      */
     @RequestMapping("/get")
     @ResponseBody
     public CommonReturnType getUser(@RequestParam(name = "id") Integer id) throws BusinessException {
 
-        //调用service服务获取对应id的用户对象并返回给前端
+        //调用 service 服务获取对应 id 的用户对象并返回给前端
         UserModel userModel = userService.getUserById(id);
 
         //若获取的对应用户信息不存在
@@ -57,13 +55,12 @@ public class UserController extends BaseController{
             throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
         }
 
-        //将核心领域模型用户对象转化为可供UI使用的viewobject
+        //将核心领域模型用户对象转化为可供 UI 使用的 viewobject
         UserVO userVO = convertFromModel(userModel);
 
         //返回通用对象
         return CommonReturnType.create(userVO);
     }
-
 
     /**
      * 用户获取短信验证码
@@ -80,12 +77,51 @@ public class UserController extends BaseController{
         randomInt += 10000;
         String otpCode = String.valueOf(randomInt);
 
-        //使用httpsession的方式绑定手机号与OTPCDOE,将OTP验证码同对应用户的手机号关联
+        //使用 httpsession 的方式绑定手机号与 OTPCDOE,将 OTP 验证码同对应用户的手机号关联
         httpServletRequest.getSession().setAttribute(telphone, otpCode);
 
-        //将OTP验证码通过短信通道发送给用户, 可以通过绑定阿里云等方式实现
+        //将 OTP 验证码通过短信通道发送给用户, 可以通过绑定阿里云等方式实现
         logger.info("telphone = " + telphone );
-        logger.info("&otpCode = " + otpCode);
+        logger.info("otpCode = " + otpCode);
+
+        return CommonReturnType.create(null);
+    }
+
+    /**
+     * 用户注册接口
+     * @param telphone
+     * @param otpCode
+     * @param name
+     * @param gender
+     * @param age
+     * @param password
+     */
+    @RequestMapping(value = "/register", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    public CommonReturnType register(@RequestParam(name = "telphone") String telphone,
+                                     @RequestParam(name = "otpCode") String otpCode,
+                                     @RequestParam(name = "name") String name,
+                                     @RequestParam(name = "gender") String gender,
+                                     @RequestParam(name = "age") String age,
+                                     @RequestParam(name = "password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+
+        //从前端录入的字段
+        String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telphone);
+
+        // 验证推送出去的验证码和前端录入的字段是否相同
+        if (!StringUtils.equals(otpCode, inSessionOtpCode)) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "短信验证码不符合");
+        }
+
+        //用户的注册流程
+        UserModel userModel = new UserModel();
+        userModel.setName(name);
+        userModel.setAge(Integer.valueOf(age));
+        userModel.setGender(Byte.valueOf(gender));
+        userModel.setTelphone(telphone);
+        userModel.setRegisitMode("byphone");
+        userModel.setEncrptPassword(this.EncodeByMd5(password));
+        userService.register(userModel);
 
         return CommonReturnType.create(null);
     }
@@ -103,62 +139,21 @@ public class UserController extends BaseController{
     @ResponseBody
     public CommonReturnType login(@RequestParam(name = "telphone") String telphone,
                                   @RequestParam(name = "password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
-        //入参校验
+
         if (StringUtils.isEmpty(telphone) || StringUtils.isEmpty(password)) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
-        //用户登陆服务,用来校验用户登陆是否合法
+
         UserModel userModel = userService.validateLogin(telphone,this.EncodeByMd5(password));
-        //将登陆凭证加入到用户登陆成功的session内
 
-        //修改成若用户登录验证成功后将对应的登录信息和登录凭证一起存入redis中
-
-        //生成登录凭证token，UUID
         String uuidToken = UUID.randomUUID().toString();
         uuidToken = uuidToken.replace("-","");
 
-        //建议token和用户登陆态之间的联系
         redisTemplate.opsForValue().set(uuidToken,userModel);
         redisTemplate.expire(uuidToken,1, TimeUnit.HOURS);
 
-//        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
-//        this.httpServletRequest.getSession().setAttribute("LOGIN_USER",userModel);
-
-        //下发了token
         return CommonReturnType.create(uuidToken);
-    }
 
-
-
-
-    //用户注册接口
-    @RequestMapping(value = "/register", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
-    @ResponseBody
-    public CommonReturnType register(@RequestParam(name = "telphone") String telphone,
-                                     @RequestParam(name = "otpCode") String otpCode,
-                                     @RequestParam(name = "name") String name,
-                                     @RequestParam(name = "gender") String gender,
-                                     @RequestParam(name = "age") String age,
-                                     @RequestParam(name = "password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
-
-        //验证手机号和对应的otpCode相符合
-        String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telphone);
-
-        if (!StringUtils.equals(otpCode, inSessionOtpCode)) {
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "短信验证码不符合");
-        }
-
-        //用户的注册流程
-        UserModel userModel = new UserModel();
-        userModel.setName(name);
-        userModel.setAge(Integer.valueOf(age));
-        userModel.setGender(Byte.valueOf(gender));
-        userModel.setTelphone(telphone);
-        userModel.setRegisitMode("byphone");
-        userModel.setEncrptPassword(this.EncodeByMd5(password));
-        userService.register(userModel);
-
-        return CommonReturnType.create(null);
     }
 
     //密码加密
