@@ -11,10 +11,13 @@ public class WebServerConfiguration implements WebServerFactoryCustomizer<Config
 
     @Override
     public void customize(ConfigurableWebServerFactory configurableWebServerFactory) {
+
         //使用对应工厂类提供给我们的接口定制化我们的tomcat connector
         ((TomcatServletWebServerFactory)configurableWebServerFactory).addConnectorCustomizers(new TomcatConnectorCustomizer() {
+
             @Override
             public void customize(Connector connector) {
+
                 Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
 
                 //定制化keepalivetimeout,设置30秒内没有请求则服务端自动断开keepalive链接
@@ -24,6 +27,7 @@ public class WebServerConfiguration implements WebServerFactoryCustomizer<Config
                 protocol.setMaxKeepAliveRequests(10000);
 
             }
+
         });
     }
 
