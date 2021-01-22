@@ -59,7 +59,9 @@ public class ItemController extends BaseController {
     @RequestMapping(value = "/list", method = {RequestMethod.GET})
     @ResponseBody
     public CommonReturnType listItem() {
+
         List<ItemModel> itemModelList = itemService.listItem();
+
         List<ItemVO> itemVOList = itemModelList.stream().map(itemModel -> {
             ItemVO itemVO = this.convertVOFromModel(itemModel);
             return itemVO;
