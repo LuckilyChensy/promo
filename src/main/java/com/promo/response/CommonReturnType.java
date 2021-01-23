@@ -11,7 +11,6 @@ public class CommonReturnType {
 
     // 利用函数重载的方式,定义了一个默认参数
     public static CommonReturnType create(Object result){
-
         return CommonReturnType.create(result, "success");
     }
 
