@@ -10,7 +10,7 @@ public class BusinessException extends Exception implements CommonError{
         this.commonError = commonError;
     }
 
-    //提供构建自定义异常的方式
+    //接收自定义errMsg的方式构造业务异常
     public BusinessException(CommonError commonError, String errMsg) {
         super();
         this.commonError = commonError;
@@ -19,16 +19,21 @@ public class BusinessException extends Exception implements CommonError{
 
     @Override
     public int getErrCode() {
-        return 0;
+        return this.commonError.getErrCode();
     }
 
     @Override
     public String getErrMsg() {
-        return null;
+        return this.commonError.getErrMsg();
     }
 
     @Override
     public CommonError setErrMsg(String errMsg) {
-        return null;
+        this.commonError.setErrMsg(errMsg);
+        return this;
+    }
+
+    public CommonError getCommonError() {
+        return commonError;
     }
 }
