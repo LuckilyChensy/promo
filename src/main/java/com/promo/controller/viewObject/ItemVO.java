@@ -39,6 +39,38 @@ public class ItemVO {
     //秒杀活动开始时间
     private String startDate;
 
+    public Integer getPromoStatus() {
+        return promoStatus;
+    }
+
+    public void setPromoStatus(Integer promoStatus) {
+        this.promoStatus = promoStatus;
+    }
+
+    public BigDecimal getPromoPrice() {
+        return promoPrice;
+    }
+
+    public void setPromoPrice(BigDecimal promoPrice) {
+        this.promoPrice = promoPrice;
+    }
+
+    public Integer getPromoId() {
+        return promoId;
+    }
+
+    public void setPromoId(Integer promoId) {
+        this.promoId = promoId;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -93,37 +125,5 @@ public class ItemVO {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
-    }
-
-    public Integer getPromoStatus() {
-        return promoStatus;
-    }
-
-    public void setPromoStatus(Integer promoStatus) {
-        this.promoStatus = promoStatus;
-    }
-
-    public BigDecimal getPromoPrice() {
-        return promoPrice;
-    }
-
-    public void setPromoPrice(BigDecimal promoPrice) {
-        this.promoPrice = promoPrice;
-    }
-
-    public Integer getPromoId() {
-        return promoId;
-    }
-
-    public void setPromoId(Integer promoId) {
-        this.promoId = promoId;
-    }
-
-    public String getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
     }
 }

@@ -40,54 +40,6 @@ public class UserController extends BaseController{
     private RedisTemplate redisTemplate;
 
     /**
-     * @param id
-     * @throws BusinessException
-     */
-    @RequestMapping("/get")
-    @ResponseBody
-    public CommonReturnType getUser(@RequestParam(name = "id") Integer id) throws BusinessException {
-
-        //调用 service 服务获取对应 id 的用户对象并返回给前端
-        UserModel userModel = userService.getUserById(id);
-
-        //若获取的对应用户信息不存在
-        if (userModel == null) {
-            throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
-        }
-
-        //将核心领域模型用户对象转化为可供 UI 使用的 viewobject
-        UserVO userVO = convertFromModel(userModel);
-
-        //返回通用对象
-        return CommonReturnType.create(userVO);
-    }
-
-    /**
-     * 用户获取短信验证码
-     * @param telphone
-     * @return
-     */
-    @RequestMapping(value = "/getotp", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
-    @ResponseBody
-    public CommonReturnType getOtp(@RequestParam(name="telphone")String telphone){
-
-        //需要按照一定的规则生成OTP验证码
-        Random random = new Random();
-        int randomInt = random.nextInt(99999);
-        randomInt += 10000;
-        String otpCode = String.valueOf(randomInt);
-
-        //使用 httpsession 的方式绑定手机号与 OTPCDOE,将 OTP 验证码同对应用户的手机号关联
-        httpServletRequest.getSession().setAttribute(telphone, otpCode);
-
-        //将 OTP 验证码通过短信通道发送给用户, 可以通过绑定阿里云等方式实现
-        logger.info("telphone = " + telphone );
-        logger.info("otpCode = " + otpCode);
-
-        return CommonReturnType.create(null);
-    }
-
-    /**
      * 用户注册接口
      * @param telphone
      * @param otpCode
@@ -119,11 +71,59 @@ public class UserController extends BaseController{
         userModel.setAge(Integer.valueOf(age));
         userModel.setGender(Byte.valueOf(gender));
         userModel.setTelphone(telphone);
-        userModel.setRegisitMode("byphone");
+        userModel.setRegisterMode("byphone");
         userModel.setEncrptPassword(this.EncodeByMd5(password));
         userService.register(userModel);
 
         return CommonReturnType.create(null);
+    }
+
+    /**
+     * 用户获取短信验证码
+     * @param telphone
+     * @return
+     */
+    @RequestMapping(value = "/getotp", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    public CommonReturnType getOtp(@RequestParam(name="telphone")String telphone){
+
+        //需要按照一定的规则生成OTP验证码
+        Random random = new Random();
+        int randomInt = random.nextInt(99999);
+        randomInt += 10000;
+        String otpCode = String.valueOf(randomInt);
+
+        //使用 httpsession 的方式绑定手机号与 OTPCDOE,将 OTP 验证码同对应用户的手机号关联
+        httpServletRequest.getSession().setAttribute(telphone, otpCode);
+
+        //将 OTP 验证码通过短信通道发送给用户, 可以通过绑定阿里云等方式实现
+        logger.info("telphone = " + telphone );
+        logger.info("otpCode = " + otpCode);
+
+        return CommonReturnType.create(null);
+    }
+
+    /**
+     * @param id
+     * @throws BusinessException
+     */
+    @RequestMapping("/get")
+    @ResponseBody
+    public CommonReturnType getUser(@RequestParam(name = "id") Integer id) throws BusinessException {
+
+        //调用 service 服务获取对应 id 的用户对象并返回给前端
+        UserModel userModel = userService.getUserById(id);
+
+        //若获取的对应用户信息不存在
+        if (userModel == null) {
+            throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
+        }
+
+        //将核心领域模型用户对象转化为可供 UI 使用的 viewobject
+        UserVO userVO = convertFromModel(userModel);
+
+        //返回通用对象
+        return CommonReturnType.create(userVO);
     }
 
     /**
@@ -156,7 +156,6 @@ public class UserController extends BaseController{
 
     }
 
-    //密码加密
     public String EncodeByMd5(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         //确定计算方法
         MessageDigest md5 = MessageDigest.getInstance("MD5");
