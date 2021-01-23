@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class OrderModel  implements Serializable {
-
-    //交易单号，例如2019052100001212，使用string类型
+    //2018102100012828
     private String id;
 
     //购买的用户id
@@ -14,13 +13,16 @@ public class OrderModel  implements Serializable {
     //购买的商品id
     private Integer itemId;
 
-    //购买时商品的单价
+    //若非空，则表示是以秒杀商品方式下单
+    private Integer promoId;
+
+    //购买商品的单价,若promoId非空，则表示秒杀商品价格
     private BigDecimal itemPrice;
 
     //购买数量
     private Integer amount;
 
-    //购买金额
+    //购买金额,若promoId非空，则表示秒杀商品价格
     private BigDecimal orderPrice;
 
     public String getId() {
@@ -47,14 +49,6 @@ public class OrderModel  implements Serializable {
         this.itemId = itemId;
     }
 
-    public BigDecimal getItemPrice() {
-        return itemPrice;
-    }
-
-    public void setItemPrice(BigDecimal itemPrice) {
-        this.itemPrice = itemPrice;
-    }
-
     public Integer getAmount() {
         return amount;
     }
@@ -69,5 +63,21 @@ public class OrderModel  implements Serializable {
 
     public void setOrderPrice(BigDecimal orderPrice) {
         this.orderPrice = orderPrice;
+    }
+
+    public BigDecimal getItemPrice() {
+        return itemPrice;
+    }
+
+    public void setItemPrice(BigDecimal itemPrice) {
+        this.itemPrice = itemPrice;
+    }
+
+    public Integer getPromoId() {
+        return promoId;
+    }
+
+    public void setPromoId(Integer promoId) {
+        this.promoId = promoId;
     }
 }
