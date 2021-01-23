@@ -35,7 +35,6 @@ public class RedisConfig {
         simpleModule.addDeserializer(DateTime.class,new JodaDateTimeJsonDeserializer());
 
         objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-
         objectMapper.registerModule(simpleModule);
 
         jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
