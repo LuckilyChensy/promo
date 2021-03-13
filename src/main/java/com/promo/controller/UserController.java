@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 @Controller("user")
 @RequestMapping("/user")
-@CrossOrigin(allowCredentials = "true",allowedHeaders = "*")
+@CrossOrigin(allowCredentials = "true",allowedHeaders = "*")    // 跨域处理
 public class UserController extends BaseController{
 
     Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -40,13 +40,7 @@ public class UserController extends BaseController{
     private RedisTemplate redisTemplate;
 
     /**
-     * 用户注册接口
-     * @param telphone
-     * @param otpCode
-     * @param name
-     * @param gender
-     * @param age
-     * @param password
+     * 用户注册-接口
      */
     @RequestMapping(value = "/register", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
@@ -79,28 +73,27 @@ public class UserController extends BaseController{
     }
 
     /**
-     * 用户获取短信验证码
-     * @param telphone
-     * @return
+     * 用户注册-短信验证码服务
      */
     @RequestMapping(value = "/getotp", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
     public CommonReturnType getOtp(@RequestParam(name="telphone")String telphone){
 
-        //需要按照一定的规则生成OTP验证码
+        //验证码生成方式
         Random random = new Random();
         int randomInt = random.nextInt(99999);
         randomInt += 10000;
         String otpCode = String.valueOf(randomInt);
 
-        //使用 httpsession 的方式绑定手机号与 OTPCDOE,将 OTP 验证码同对应用户的手机号关联
+        // httpsession 绑定 手机号码 与 验证码
         httpServletRequest.getSession().setAttribute(telphone, otpCode);
 
-        //将 OTP 验证码通过短信通道发送给用户, 可以通过绑定阿里云等方式实现
-        logger.info("telphone = " + telphone );
-        logger.info("otpCode = " + otpCode);
+        //将 OTP 验证码通过短信通道发送给用户, 该段逻辑可以嵌入阿里云的短信通知方式
+        logger.info("--------- telphone: " + telphone );
+        logger.info("--------- otpCode : " + otpCode);
 
         return CommonReturnType.create(null);
+
     }
 
     /**
