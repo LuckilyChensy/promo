@@ -11,10 +11,10 @@
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/promo?useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF8&amp;serverTimezone=GMT"
                         userId="root"
-                        password="123">
+                        password="123456">
         </jdbcConnection>
 
-        <!--生成DataObject类存放位置-->
+        <!--生成 DataObject类存放位置-->
         <javaModelGenerator targetPackage="com.promo.dataobject" targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
@@ -25,7 +25,7 @@
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
-        <!--生成Dao类存放位置-->
+        <!--生成 Dao 类存放位置-->
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.promo.dao"  targetProject="src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
@@ -37,6 +37,7 @@
                enableSelectByExample="false"
                selectByExampleQueryId="false" >
         </table>
+
         <table tableName="item_stock" domainObjectName="ItemStockDO"
                enableCountByExample="false"
                enableUpdateByExample="false"
@@ -70,9 +71,12 @@
         </table>
 
         <table tableName="stock_log"  domainObjectName="StockLogDO" enableCountByExample="false"
-               enableUpdateByExample="false" enableDeleteByExample="false"
-               enableSelectByExample="false" selectByExampleQueryId="false">
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
         </table>
 
     </context>
+
 </generatorConfiguration>
