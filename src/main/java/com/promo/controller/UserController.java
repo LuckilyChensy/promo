@@ -97,6 +97,29 @@ public class UserController extends BaseController{
     }
 
     /**
+     * 用户服务 - 用户登录
+     */
+    @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    @ResponseBody
+    public CommonReturnType login(@RequestParam(name = "telphone") String telphone,
+                                  @RequestParam(name = "password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
+        // 必要的参数校验
+        if (StringUtils.isEmpty(telphone) || StringUtils.isEmpty(password)) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+        }
+
+        UserModel userModel = userService.validateLogin(telphone,this.EncodeByMd5(password));
+
+        String uuidToken = UUID.randomUUID().toString();
+        uuidToken = uuidToken.replace("-","");
+
+        redisTemplate.opsForValue().set(uuidToken,userModel);
+        redisTemplate.expire(uuidToken,1, TimeUnit.HOURS);
+
+        return CommonReturnType.create(uuidToken);
+
+    }
+    /**
      * @param id
      * @throws BusinessException
      */
@@ -119,35 +142,7 @@ public class UserController extends BaseController{
         return CommonReturnType.create(userVO);
     }
 
-    /**
-     * 用户登录接口
-     * @param telphone
-     * @param password
-     * @return
-     * @throws BusinessException
-     * @throws UnsupportedEncodingException
-     * @throws NoSuchAlgorithmException
-     */
-    @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
-    @ResponseBody
-    public CommonReturnType login(@RequestParam(name = "telphone") String telphone,
-                                  @RequestParam(name = "password") String password) throws BusinessException, UnsupportedEncodingException, NoSuchAlgorithmException {
 
-        if (StringUtils.isEmpty(telphone) || StringUtils.isEmpty(password)) {
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
-        }
-
-        UserModel userModel = userService.validateLogin(telphone,this.EncodeByMd5(password));
-
-        String uuidToken = UUID.randomUUID().toString();
-        uuidToken = uuidToken.replace("-","");
-
-        redisTemplate.opsForValue().set(uuidToken,userModel);
-        redisTemplate.expire(uuidToken,1, TimeUnit.HOURS);
-
-        return CommonReturnType.create(uuidToken);
-
-    }
 
     public String EncodeByMd5(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         //确定计算方法
