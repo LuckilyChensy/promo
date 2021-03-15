@@ -4,25 +4,26 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class OrderModel  implements Serializable {
-    //2018102100012828
+
+    // id 通常会和实际的业务内容有关
     private String id;
 
-    //购买的用户id
+    // 客户 id
     private Integer userId;
 
-    //购买的商品id
+    // 商品 id
     private Integer itemId;
 
-    //若非空，则表示是以秒杀商品方式下单
+    // 若非空，则表示是以秒杀商品方式下单
     private Integer promoId;
 
-    //购买商品的单价,若promoId非空，则表示秒杀商品价格
+    // 购买商品的单价, 秒杀场景下 promoId 非空，则表示秒杀商品价格
     private BigDecimal itemPrice;
 
-    //购买数量
+    // 购买数量
     private Integer amount;
 
-    //购买金额,若promoId非空，则表示秒杀商品价格
+    // 购买金额,若 promoId 非空，则表示秒杀商品价格
     private BigDecimal orderPrice;
 
     public String getId() {
